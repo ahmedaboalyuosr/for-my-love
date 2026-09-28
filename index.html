@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f2ef" />
 
   <title>For You ❤️</title>
 
@@ -10,25 +11,127 @@
 </head>
 
 <body>
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
 
-  <div class="card">
-    <div class="heart">❤️</div>
+  <main id="app">
 
-    <h1>Will you marry me?</h1>
+    <section id="introScreen" class="screen active">
+      <div class="card intro-card">
+        <p class="eyebrow">FOR MY FAVORITE PERSON</p>
 
-    <p>I have a very important question for you...</p>
+        <div class="seal" aria-hidden="true">♡</div>
 
-    <div class="buttons">
-      <button id="yesBtn">Yes ❤️</button>
-      <button id="noBtn">No 😏</button>
-    </div>
-  </div>
+        <h1>I made something for you.</h1>
 
-  <div id="success" class="success">
-    <div class="big-heart">❤️</div>
-    <h1>I knew you'd say yes!</h1>
-    <p>I love you ❤️</p>
-  </div>
+        <p class="subtitle">
+          Just a tiny page for a very big question.
+        </p>
+
+        <button id="openBtn" class="primary-btn">
+          Open it
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
+
+
+    <section id="storyScreen" class="screen">
+      <div class="card story-card">
+
+        <div class="progress-dots" aria-hidden="true">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div id="storyContent" class="story-content">
+          <div id="storyIcon" class="story-icon">✨</div>
+
+          <p id="storyKicker" class="story-kicker">
+            FIRST THING
+          </p>
+
+          <h2 id="storyText">
+            Out of everyone I could have met...
+          </h2>
+        </div>
+
+        <button id="nextStoryBtn" class="soft-btn">
+          Next
+          <span aria-hidden="true">→</span>
+        </button>
+
+      </div>
+    </section>
+
+
+    <section id="proposalScreen" class="screen">
+      <div class="card proposal-card">
+
+        <p class="eyebrow">
+          ONE LAST THING
+        </p>
+
+        <div class="ring" aria-hidden="true">
+          💍
+        </div>
+
+        <h1>Will you marry me?</h1>
+
+        <p class="subtitle">
+          There is definitely a correct answer.
+        </p>
+
+        <div class="proposal-actions">
+          <button id="yesBtn" class="yes-btn">
+            Yes ❤️
+          </button>
+
+          <button id="noBtn" class="no-btn">
+            No 😏
+          </button>
+        </div>
+
+        <p id="teaseText" class="tease-text" aria-live="polite"></p>
+
+      </div>
+    </section>
+
+
+    <section id="successScreen" class="screen success-screen">
+
+      <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+
+      <div class="card success-card">
+
+        <p class="eyebrow">
+          BEST ANSWER EVER
+        </p>
+
+        <div class="success-heart" aria-hidden="true">
+          ❤️
+        </div>
+
+        <h1>You said YES!</h1>
+
+        <p class="success-message">
+          Best answer. Best person. Best future.
+        </p>
+
+        <div class="date-pill">
+          Our yes day&nbsp; • &nbsp;<span id="yesDate"></span>
+        </div>
+
+        <p class="screenshot-note">
+          Screenshot this. I’m keeping this moment forever.
+        </p>
+
+      </div>
+    </section>
+
+  </main>
 
   <script src="script.js"></script>
 </body>
