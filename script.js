@@ -1,24 +1,202 @@
-const noBtn = document.getElementById("noBtn");
+const introScreen = document.getElementById("introScreen");
+const storyScreen = document.getElementById("storyScreen");
+const proposalScreen = document.getElementById("proposalScreen");
+const successScreen = document.getElementById("successScreen");
+
+const openBtn = document.getElementById("openBtn");
+const nextStoryBtn = document.getElementById("nextStoryBtn");
+
+const storyContent = document.getElementById("storyContent");
+const storyIcon = document.getElementById("storyIcon");
+const storyKicker = document.getElementById("storyKicker");
+const storyText = document.getElementById("storyText");
+const dots = [...document.querySelectorAll(".dot")];
+
 const yesBtn = document.getElementById("yesBtn");
-const card = document.querySelector(".card");
-const success = document.getElementById("success");
+const noBtn = document.getElementById("noBtn");
+const teaseText = document.getElementById("teaseText");
+
+const confettiLayer = document.getElementById("confettiLayer");
+const yesDate = document.getElementById("yesDate");
+
+
+const storySteps = [
+  {
+    icon: "✨",
+    kicker: "FIRST THING",
+    text: "Out of everyone I could have met..."
+  },
+  {
+    icon: "🤍",
+    kicker: "SOMEHOW",
+    text: "I found the person who makes ordinary days feel special."
+  },
+  {
+    icon: "∞",
+    kicker: "THE BEST PART",
+    text: "Every version of my future looks better with you in it."
+  },
+  {
+    icon: "💌",
+    kicker: "SO...",
+    text: "I have one tiny question left to ask you."
+  }
+];
+
+
+const noMessages = [
+  "No 😏",
+  "Are you sure?",
+  "Think again 😌",
+  "Nice try 😂",
+  "Still no?",
+  "Be serious 😭",
+  "Wrong button 👀",
+  "Just press Yes ❤️"
+];
+
+
+const teaseMessages = [
+  "",
+  "That button seems a little shy.",
+  "You’re making the Yes button confident 😂",
+  "There is only one correct answer here.",
+  "Nice try. Really nice try.",
+  "At this point, we both know how this ends ❤️"
+];
+
+
+let storyIndex = 0;
 
 let escapeCount = 0;
 let yesScale = 1;
 let isFloating = false;
 
+let moveLocked = false;
+
 
 /* =========================
-   GROW YES
+   SCREEN TRANSITIONS
+========================= */
+
+function showScreen(currentScreen, nextScreen) {
+
+  currentScreen.classList.remove("active");
+
+  window.setTimeout(() => {
+
+    nextScreen.classList.add("active");
+
+  }, 170);
+}
+
+
+openBtn.addEventListener("click", () => {
+
+  showScreen(
+    introScreen,
+    storyScreen
+  );
+});
+
+
+/* =========================
+   STORY
+========================= */
+
+function updateStory() {
+
+  storyContent.classList.add("changing");
+
+  window.setTimeout(() => {
+
+    const step =
+      storySteps[storyIndex];
+
+    storyIcon.textContent =
+      step.icon;
+
+    storyKicker.textContent =
+      step.kicker;
+
+    storyText.textContent =
+      step.text;
+
+
+    dots.forEach(
+      (dot, index) => {
+
+        dot.classList.toggle(
+          "active",
+          index === storyIndex
+        );
+
+      }
+    );
+
+
+    nextStoryBtn.innerHTML =
+      storyIndex ===
+      storySteps.length - 1
+
+        ? 'Ask me <span aria-hidden="true">→</span>'
+
+        : 'Next <span aria-hidden="true">→</span>';
+
+
+    storyContent.classList.remove(
+      "changing"
+    );
+
+  }, 180);
+}
+
+
+nextStoryBtn.addEventListener(
+  "click",
+  () => {
+
+    if (
+      storyIndex <
+      storySteps.length - 1
+    ) {
+
+      storyIndex++;
+
+      updateStory();
+
+      return;
+    }
+
+
+    showScreen(
+      storyScreen,
+      proposalScreen
+    );
+
+  }
+);
+
+
+/* =========================
+   YES GROWTH
 ========================= */
 
 function growYesButton() {
 
-  yesScale += 0.12;
+  yesScale += 0.13;
 
-  if (yesScale > 2.3) {
-    yesScale = 2.3;
-  }
+  const maxScale =
+    window.innerWidth < 520
+      ? 1.95
+      : 2.15;
+
+  yesScale =
+    Math.min(
+      yesScale,
+      maxScale
+    );
+
 
   yesBtn.style.setProperty(
     "--yes-scale",
@@ -28,172 +206,419 @@ function growYesButton() {
 
 
 /* =========================
+   SMALL HEART AT OLD
+   NO POSITION
+========================= */
+
+function createEscapeHeart(rect) {
+
+  const heart =
+    document.createElement("span");
+
+  heart.className =
+    "escape-heart";
+
+  heart.textContent =
+    ["♡", "♥", "💗"][
+      Math.floor(
+        Math.random() * 3
+      )
+    ];
+
+
+  heart.style.left =
+    rect.left +
+    rect.width / 2 +
+    "px";
+
+  heart.style.top =
+    rect.top +
+    rect.height / 2 +
+    "px";
+
+
+  document.body.appendChild(
+    heart
+  );
+
+
+  window.setTimeout(
+    () => heart.remove(),
+    850
+  );
+}
+
+
+/* =========================
+   COLLISION CHECK
+========================= */
+
+function overlapsRect(
+  x,
+  y,
+  width,
+  height,
+  rect,
+  gap = 20
+) {
+
+  return !(
+    x + width <
+      rect.left - gap ||
+
+    x >
+      rect.right + gap ||
+
+    y + height <
+      rect.top - gap ||
+
+    y >
+      rect.bottom + gap
+  );
+}
+
+
+/* =========================
    MOVE NO
 ========================= */
 
-function moveNoButton() {
+function moveNoButton(event) {
+
+  if (moveLocked) {
+    return;
+  }
+
+
+  moveLocked = true;
+
+  window.setTimeout(
+    () => {
+      moveLocked = false;
+    },
+    110
+  );
+
+
+  if (event) {
+    event.preventDefault();
+  }
+
 
   escapeCount++;
 
   growYesButton();
 
 
-  /*
-    أول مرة يهرب:
-    نحفظ مكانه الحالي وبعدها
-    نخليه Fixed في الشاشة كلها
-  */
+  const oldRect =
+    noBtn.getBoundingClientRect();
+
+
+  createEscapeHeart(
+    oldRect
+  );
+
 
   if (!isFloating) {
 
-    const currentRect =
-      noBtn.getBoundingClientRect();
-
-    noBtn.style.position = "fixed";
+    noBtn.classList.add(
+      "floating"
+    );
 
     noBtn.style.left =
-      currentRect.left + "px";
+      oldRect.left + "px";
 
     noBtn.style.top =
-      currentRect.top + "px";
+      oldRect.top + "px";
 
     isFloating = true;
   }
 
 
-  const rect =
-    noBtn.getBoundingClientRect();
-
-  const buttonWidth =
+  const width =
     noBtn.offsetWidth;
 
-  const buttonHeight =
+  const height =
     noBtn.offsetHeight;
 
 
-  /*
-    مساحة أمان من حواف الشاشة
-  */
+  const padding =
+    window.innerWidth < 520
+      ? 14
+      : 20;
 
-  const padding = 15;
-
-
-  const minX = padding;
 
   const maxX =
-    window.innerWidth -
-    buttonWidth -
-    padding;
+    Math.max(
+      padding,
+      window.innerWidth -
+      width -
+      padding
+    );
 
-
-  const minY = padding;
 
   const maxY =
-    window.innerHeight -
-    buttonHeight -
-    padding;
+    Math.max(
+      padding,
+      window.innerHeight -
+      height -
+      padding
+    );
 
 
-  let newX;
-  let newY;
+  const yesRect =
+    yesBtn.getBoundingClientRect();
+
+
+  let newX = padding;
+  let newY = padding;
 
   let attempts = 0;
 
 
-  /*
-    نختار مكان عشوائي بعيد
-    عن مكانه الحالي
-  */
-
   do {
 
     newX =
-      minX +
+      padding +
       Math.random() *
-      (maxX - minX);
+      Math.max(
+        1,
+        maxX - padding
+      );
+
 
     newY =
-      minY +
+      padding +
       Math.random() *
-      (maxY - minY);
+      Math.max(
+        1,
+        maxY - padding
+      );
+
 
     attempts++;
 
   } while (
 
-    Math.abs(newX - rect.left) < 100 &&
+    (
+      Math.hypot(
+        newX - oldRect.left,
+        newY - oldRect.top
+      ) < 130
 
-    Math.abs(newY - rect.top) < 100 &&
+      ||
 
-    attempts < 100
+      overlapsRect(
+        newX,
+        newY,
+        width,
+        height,
+        yesRect,
+        24
+      )
+    )
 
+    &&
+
+    attempts < 120
+  );
+
+
+  const speed =
+    Math.max(
+      0.055,
+      0.17 -
+      escapeCount * 0.012
+    );
+
+
+  noBtn.style.setProperty(
+    "--escape-speed",
+    speed + "s"
   );
 
 
   noBtn.style.left =
-    `${newX}px`;
+    newX + "px";
 
   noBtn.style.top =
-    `${newY}px`;
+    newY + "px";
 
 
-  /*
-    كل مرة يهرب أسرع
-  */
+  const messageIndex =
+    Math.min(
+      escapeCount,
+      noMessages.length - 1
+    );
 
-  let speed =
-    0.18 -
-    escapeCount * 0.012;
 
-  if (speed < 0.045) {
-    speed = 0.045;
-  }
+  noBtn.textContent =
+    noMessages[messageIndex];
 
-  noBtn.style.transition =
-    `left ${speed}s ease, top ${speed}s ease`;
+
+  const teaseIndex =
+    Math.min(
+      Math.floor(
+        escapeCount / 2
+      ),
+      teaseMessages.length - 1
+    );
+
+
+  teaseText.textContent =
+    teaseMessages[teaseIndex];
 }
 
 
-/* =========================
-   PC
-========================= */
-
+/* Desktop */
 noBtn.addEventListener(
   "mouseenter",
   moveNoButton
 );
 
 
-/* =========================
-   MOBILE
-========================= */
-
+/* Mobile + touch */
 noBtn.addEventListener(
   "pointerdown",
-  function (e) {
+  (event) => {
 
-    e.preventDefault();
+    if (
+      event.pointerType !==
+      "mouse"
+    ) {
 
-    moveNoButton();
+      moveNoButton(event);
+
+    }
+
+  }
+);
+
+
+/* Emergency backup */
+noBtn.addEventListener(
+  "click",
+  (event) => {
+
+    event.preventDefault();
+
+    moveNoButton(event);
 
   }
 );
 
 
 /* =========================
-   EXTRA PROTECTION 😂
+   CONFETTI
 ========================= */
 
-noBtn.addEventListener(
-  "click",
-  function (e) {
+function launchConfetti() {
 
-    e.preventDefault();
+  confettiLayer.innerHTML =
+    "";
 
-    moveNoButton();
 
+  const colors = [
+    "#b7375a",
+    "#e9a8ba",
+    "#f3c8d4",
+    "#8f2744",
+    "#ffffff",
+    "#d8b36b"
+  ];
+
+
+  for (
+    let i = 0;
+    i < 78;
+    i++
+  ) {
+
+    const piece =
+      document.createElement(
+        "span"
+      );
+
+
+    piece.className =
+      "confetti";
+
+
+    piece.style.left =
+      Math.random() *
+      100 +
+      "vw";
+
+
+    piece.style.background =
+      colors[
+        Math.floor(
+          Math.random() *
+          colors.length
+        )
+      ];
+
+
+    piece.style.width =
+      6 +
+      Math.random() *
+      7 +
+      "px";
+
+
+    piece.style.height =
+      9 +
+      Math.random() *
+      11 +
+      "px";
+
+
+    piece.style.setProperty(
+      "--fall-time",
+      2.4 +
+      Math.random() *
+      2.4 +
+      "s"
+    );
+
+
+    piece.style.setProperty(
+      "--drift",
+      -80 +
+      Math.random() *
+      160 +
+      "px"
+    );
+
+
+    piece.style.setProperty(
+      "--rotation",
+      -540 +
+      Math.random() *
+      1080 +
+      "deg"
+    );
+
+
+    piece.style.animationDelay =
+      Math.random() *
+      0.55 +
+      "s";
+
+
+    confettiLayer.appendChild(
+      piece
+    );
   }
-);
+
+
+  window.setTimeout(
+    () => {
+      confettiLayer.innerHTML =
+        "";
+    },
+    5600
+  );
+}
 
 
 /* =========================
@@ -202,13 +627,92 @@ noBtn.addEventListener(
 
 yesBtn.addEventListener(
   "click",
-  function () {
+  () => {
 
-    noBtn.style.display = "none";
+    noBtn.style.display =
+      "none";
 
-    card.style.display = "none";
 
-    success.style.display = "flex";
+    const today =
+      new Date();
+
+
+    yesDate.textContent =
+      today.toLocaleDateString(
+        "en-GB",
+        {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+
+    showScreen(
+      proposalScreen,
+      successScreen
+    );
+
+
+    window.setTimeout(
+      launchConfetti,
+      220
+    );
+
+  }
+);
+
+
+/* =========================
+   KEEP FLOATING NO
+   INSIDE SCREEN ON RESIZE
+========================= */
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    if (!isFloating) {
+      return;
+    }
+
+
+    const rect =
+      noBtn.getBoundingClientRect();
+
+
+    const padding = 14;
+
+
+    const safeX =
+      Math.min(
+        Math.max(
+          padding,
+          rect.left
+        ),
+        window.innerWidth -
+        rect.width -
+        padding
+      );
+
+
+    const safeY =
+      Math.min(
+        Math.max(
+          padding,
+          rect.top
+        ),
+        window.innerHeight -
+        rect.height -
+        padding
+      );
+
+
+    noBtn.style.left =
+      safeX + "px";
+
+    noBtn.style.top =
+      safeY + "px";
 
   }
 );
