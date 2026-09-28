@@ -610,6 +610,25 @@ button {
 }
 
 
+.no-btn::before {
+  content: "";
+
+  position: absolute;
+
+  inset: -22px;
+
+  border-radius: 999px;
+
+  background: transparent;
+}
+
+
+.no-btn:active {
+  box-shadow:
+    0 10px 22px rgba(54, 34, 41, 0.08);
+}
+
+
 .no-btn.floating {
   position: fixed !important;
 
