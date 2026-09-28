@@ -17,52 +17,53 @@ const noBtn = document.getElementById("noBtn");
 const teaseText = document.getElementById("teaseText");
 
 const confettiLayer = document.getElementById("confettiLayer");
-const yesDate = document.getElementById("yesDate");
+const memoryPhoto = document.getElementById("memoryPhoto");
+const finalPhoto = document.getElementById("finalPhoto");
 
 
 const storySteps = [
   {
-    icon: "✨",
-    kicker: "FIRST THING",
-    text: "Out of everyone I could have met..."
+    icon: "24/4",
+    kicker: "OUR DAY",
+    text: "The day one of my favorite chapters began."
   },
   {
-    icon: "🤍",
-    kicker: "SOMEHOW",
-    text: "I found the person who makes ordinary days feel special."
+    icon: "♡",
+    kicker: "BASBOSTY",
+    text: "You make the normal days feel like the ones worth remembering."
   },
   {
-    icon: "∞",
-    kicker: "THE BEST PART",
-    text: "Every version of my future looks better with you in it."
+    icon: "تلب",
+    kicker: "OUR LITTLE WORD",
+    text: "Some things make no sense to anyone else... and that is exactly why they are ours."
   },
   {
     icon: "💌",
-    kicker: "SO...",
-    text: "I have one tiny question left to ask you."
+    kicker: "FOR YOU",
+    text: "So, Basbosty... I still have one very important question."
   }
 ];
 
 
 const noMessages = [
   "No 😏",
-  "Are you sure?",
-  "Think again 😌",
-  "Nice try 😂",
-  "Still no?",
-  "Be serious 😭",
-  "Wrong button 👀",
-  "Just press Yes ❤️"
+  "Basbosty... really? 👀",
+  "تلب says try again 😂",
+  "Wrong button, Basbosty 😌",
+  "24/4 is watching 👀",
+  "You’re making Yes bigger 😂",
+  "Enough games 😭",
+  "Just press Yes, Basbosty ❤️"
 ];
 
 
 const teaseMessages = [
   "",
-  "That button seems a little shy.",
-  "You’re making the Yes button confident 😂",
-  "There is only one correct answer here.",
-  "Nice try. Really nice try.",
-  "At this point, we both know how this ends ❤️"
+  "That button already knows it has no chance.",
+  "Basbosty, behave 😂",
+  "Wrong answer detected.",
+  "Even تلب knows the answer.",
+  "Okay... the Yes button is taking over now ❤️"
 ];
 
 
@@ -713,19 +714,8 @@ yesBtn.addEventListener(
       "none";
 
 
-    const today =
-      new Date();
-
-
-    yesDate.textContent =
-      today.toLocaleDateString(
-        "en-GB",
-        {
-          day: "numeric",
-          month: "long",
-          year: "numeric"
-        }
-      );
+    finalPhoto.src =
+      memoryPhoto.src;
 
 
     showScreen(
