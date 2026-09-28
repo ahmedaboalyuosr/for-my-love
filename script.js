@@ -23,7 +23,7 @@ const finalPhoto = document.getElementById("finalPhoto");
 
 const storySteps = [
   {
-    icon: "24/4",
+    icon: "25/6/2025",
     kicker: "OUR DAY",
     text: "The day one of my favorite chapters began."
   },
@@ -50,7 +50,7 @@ const noMessages = [
   "Basbosty... really? 👀",
   "تلب says try again 😂",
   "Wrong button, Basbosty 😌",
-  "24/4 is watching 👀",
+  "25/6/2025 is watching 👀",
   "You’re making Yes bigger 😂",
   "Enough games 😭",
   "Just press Yes, Basbosty ❤️"
