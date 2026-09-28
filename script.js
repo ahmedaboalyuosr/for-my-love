@@ -284,6 +284,11 @@ function overlapsRect(
 
 function moveNoButton(event) {
 
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   if (moveLocked) {
     return;
   }
@@ -297,11 +302,6 @@ function moveNoButton(event) {
     },
     110
   );
-
-
-  if (event) {
-    event.preventDefault();
-  }
 
 
   escapeCount++;
@@ -469,41 +469,121 @@ function moveNoButton(event) {
 }
 
 
-/* Desktop */
+/* =========================
+   NO BUTTON: IMPOSSIBLE TO PRESS
+========================= */
+
+function cancelNoEvent(event) {
+
+  event.preventDefault();
+  event.stopPropagation();
+
+}
+
+
+function escapeNo(event) {
+
+  cancelNoEvent(event);
+
+  moveNoButton();
+
+}
+
+
+/* Desktop: run away before a click can happen */
 noBtn.addEventListener(
   "mouseenter",
   moveNoButton
 );
 
 
-/* Mobile + touch */
+/* Mobile Safari / iPhone */
+noBtn.addEventListener(
+  "touchstart",
+  escapeNo,
+  {
+    passive: false,
+    capture: true
+  }
+);
+
+
+/* Android + modern mobile browsers */
 noBtn.addEventListener(
   "pointerdown",
   (event) => {
+
+    cancelNoEvent(event);
 
     if (
       event.pointerType !==
       "mouse"
     ) {
 
-      moveNoButton(event);
+      moveNoButton();
 
     }
 
-  }
+  },
+  true
 );
 
 
-/* Emergency backup */
+/* Never allow a real mouse press */
+noBtn.addEventListener(
+  "mousedown",
+  cancelNoEvent,
+  true
+);
+
+
+/* Never allow a completed click */
 noBtn.addEventListener(
   "click",
+  cancelNoEvent,
+  true
+);
+
+
+/* Block long press / context menu */
+noBtn.addEventListener(
+  "contextmenu",
+  cancelNoEvent,
+  true
+);
+
+
+/* Block double-click too */
+noBtn.addEventListener(
+  "dblclick",
+  cancelNoEvent,
+  true
+);
+
+
+/* Keyboard fallback */
+noBtn.addEventListener(
+  "keydown",
   (event) => {
 
-    event.preventDefault();
+    if (
+      event.key === "Enter" ||
+      event.key === " "
+    ) {
 
-    moveNoButton(event);
+      escapeNo(event);
 
-  }
+    }
+
+  },
+  true
+);
+
+
+/* Don't let the button keep keyboard focus */
+noBtn.setAttribute(
+  "tabindex",
+  "-1"
 );
 
 
